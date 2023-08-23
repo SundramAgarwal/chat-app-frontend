@@ -11,8 +11,12 @@ import {
 import React, { useState } from "react";
 
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+
   const [show, setShow] = useState(false);
   const [name, setName] = useState();
   const [email, setEmail] = useState();
@@ -21,8 +25,74 @@ const Signup = () => {
   const [pic, setPic] = useState();
   const [loading, setLoading] = useState(false);
   const toast = useToast();
+  const navigate = useNavigate();
 
   const handleClick = () => setShow(!show);
+
+  const submitHandler = async () => {
+    setLoading(true);
+    if (!name || !email || !password || !confirmPassword) {
+      toast({
+        title: "Please Fill all the Feilds",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      setLoading(false);
+      return;
+    }
+    if (password !== confirmPassword) {
+      toast({
+        title: "Passwords Do Not Match",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      return;
+    }
+    console.log(name, email, password, pic);
+    try {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+
+      const { data } = await axios.post(
+        `${BACKEND_URL}/api/user/register`,
+        {
+          name,
+          email,
+          password,
+          pic,
+        },
+        config
+      );
+      console.log(data);
+      toast({
+        title: "Registration Successful",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      localStorage.setItem("userInfo", JSON.stringify(data));
+      setLoading(false);
+      navigate("/chats");
+    } catch (error) {
+      toast({
+        title: "Error Occured!",
+        description: error.response.data.message,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      setLoading(false);
+    }
+  };
 
   const postDetails = (pics) => {
     setLoading(true);
@@ -68,8 +138,6 @@ const Signup = () => {
       return;
     }
   };
-
-  const submitHandler = () => {};
 
   return (
     <VStack spacing="5px" color="black">

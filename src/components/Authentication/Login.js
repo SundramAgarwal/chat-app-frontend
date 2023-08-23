@@ -7,25 +7,92 @@ import {
   InputGroup,
   InputRightElement,
   VStack,
+  useToast,
 } from "@chakra-ui/react";
+import axios from "axios";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
   const [show, setShow] = useState(false);
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const toast = useToast();
+  const [loading, setLoading] = useState(false);
+  const [guestLogin, setGuestLogin] = useState(false);
+
+  // const { setUser } = ChatState();
+
+  const navigate = useNavigate();
 
   const handleClick = () => setShow(!show);
 
-  const submitHandler = () => {};
+  const submitHandler = async () => {
+    setLoading(true);
+    if (!email || !password) {
+      toast({
+        title: "Please Fill all the Feilds",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+
+      const { data } = await axios.post(
+        `${BACKEND_URL}/api/user/login`,
+        { email, password },
+        config
+      );
+
+      toast({
+        title: "Login Successful",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      // setUser(data);
+      localStorage.setItem("userInfo", JSON.stringify(data));
+      setLoading(false);
+      navigate("/chats");
+    } catch (error) {
+      toast({
+        title: "Error Occured!",
+        description: error.response.data.message,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      setLoading(false);
+    }
+  };
+
+  const handleGuestLogin = () => {
+    setEmail("guest@example.com");
+    setPassword("guest@007");
+    setGuestLogin(true);
+  };
 
   return (
     <VStack spacing="5px" color="black">
       <FormControl id="email" isRequired>
         <FormLabel>Email</FormLabel>
         <Input
-          type={"email"}
+          type={guestLogin ? "password" : "email"}
           placeholder="abc@gmail.com"
+          value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
       </FormControl>
@@ -34,8 +101,9 @@ const Login = () => {
         <FormLabel>Password</FormLabel>
         <InputGroup>
           <Input
-            type={show ? "text" : "password"}
+            type={guestLogin ? "password" : show ? "text" : "password"}
             placeholder="**********"
+            value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
           <InputRightElement width="4.5rem">
@@ -44,6 +112,7 @@ const Login = () => {
               size="sm"
               backgroundColor={"white"}
               onClick={handleClick}
+              display={guestLogin ? "none" : "block"}
             >
               {show ? <ViewOffIcon /> : <ViewIcon />}
             </Button>
@@ -56,6 +125,7 @@ const Login = () => {
         width="100%"
         style={{ marginTop: 15 }}
         onClick={submitHandler}
+        isLoading={loading}
       >
         Login
       </Button>
@@ -64,10 +134,7 @@ const Login = () => {
         variant="solid"
         colorScheme="red"
         width="100%"
-        onClick={() => {
-          setEmail("guest@example.com");
-          setPassword("123456");
-        }}
+        onClick={handleGuestLogin} // Call the guest login function
       >
         Login as Guest User
       </Button>
