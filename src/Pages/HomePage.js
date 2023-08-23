@@ -50,10 +50,14 @@ const HomePage = () => {
           </TabList>
           <TabPanels>
             <TabPanel>
-              <Login />
+              <>
+                <Login />
+              </>
             </TabPanel>
             <TabPanel>
-              <Signup />
+              <>
+                <Signup />
+              </>
             </TabPanel>
           </TabPanels>
         </Tabs>

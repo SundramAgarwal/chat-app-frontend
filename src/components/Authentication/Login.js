@@ -1,3 +1,4 @@
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import {
   Button,
   FormControl,
@@ -38,8 +39,13 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
           <InputRightElement width="4.5rem">
-            <Button h="1.75rem" size="sm" onClick={handleClick}>
-              {show ? "Hide" : "show"}
+            <Button
+              h="1.75rem"
+              size="sm"
+              backgroundColor={"white"}
+              onClick={handleClick}
+            >
+              {show ? <ViewOffIcon /> : <ViewIcon />}
             </Button>
           </InputRightElement>
         </InputGroup>

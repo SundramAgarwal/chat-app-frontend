@@ -9,6 +9,8 @@ import {
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+
 const Signup = () => {
   const [show, setShow] = useState(false);
   const [name, setName] = useState();
@@ -52,8 +54,13 @@ const Signup = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
           <InputRightElement width="4.5rem">
-            <Button h="1.75rem" size="sm" onClick={handleClick}>
-              {show ? "Hide" : "show"}
+            <Button
+              h="1.75rem"
+              size="sm"
+              backgroundColor={"white"}
+              onClick={handleClick}
+            >
+              {show ? <ViewOffIcon /> : <ViewIcon />}
             </Button>
           </InputRightElement>
         </InputGroup>
@@ -68,8 +75,13 @@ const Signup = () => {
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
           <InputRightElement width="4.5rem">
-            <Button h="1.75rem" size="sm" onClick={handleClick}>
-              {show ? "Hide" : "show"}
+            <Button
+              h="1.75rem"
+              size="sm"
+              backgroundColor={"white"}
+              onClick={handleClick}
+            >
+              {show ? <ViewOffIcon /> : <ViewIcon />}
             </Button>
           </InputRightElement>
         </InputGroup>
