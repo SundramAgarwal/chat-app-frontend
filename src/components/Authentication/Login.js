@@ -1,6 +1,7 @@
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import {
   Button,
+  Checkbox,
   FormControl,
   FormLabel,
   Input,
@@ -10,7 +11,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -21,6 +22,7 @@ const Login = () => {
   const toast = useToast();
   const [loading, setLoading] = useState(false);
   const [guestLogin, setGuestLogin] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
 
   // const { setUser } = ChatState();
 
@@ -62,6 +64,16 @@ const Login = () => {
         isClosable: true,
         position: "bottom",
       });
+
+      if (rememberMe) {
+        // Save email and password to local storage if "Remember Me" is checked
+        localStorage.setItem("rememberedEmail", email);
+        localStorage.setItem("rememberedPassword", password);
+      } else {
+        // Clear saved email and password from local storage
+        localStorage.removeItem("rememberedEmail");
+        localStorage.removeItem("rememberedPassword");
+      }
       // setUser(data);
       localStorage.setItem("userInfo", JSON.stringify(data));
       setLoading(false);
@@ -84,6 +96,17 @@ const Login = () => {
     setPassword("guest@007");
     setGuestLogin(true);
   };
+
+  useEffect(() => {
+    const rememberedEmail = localStorage.getItem("rememberedEmail");
+    const rememberedPassword = localStorage.getItem("rememberedPassword");
+
+    if (rememberedEmail && rememberedPassword) {
+      setEmail(rememberedEmail);
+      setPassword(rememberedPassword);
+      setRememberMe(true);
+    }
+  }, []);
 
   return (
     <VStack spacing="5px" color="black">
@@ -118,6 +141,18 @@ const Login = () => {
             </Button>
           </InputRightElement>
         </InputGroup>
+      </FormControl>
+
+      <FormControl id="rememberMe">
+        <Checkbox
+          isChecked={rememberMe}
+          onChange={() => setRememberMe(!rememberMe)}
+          colorScheme="blue"
+          size="lg"
+          mt="3"
+        >
+          Remember Me
+        </Checkbox>
       </FormControl>
 
       <Button
