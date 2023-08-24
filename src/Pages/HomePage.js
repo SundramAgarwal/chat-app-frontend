@@ -41,23 +41,37 @@ const HomePage = () => {
       >
         <Tabs variant="soft-rounded">
           <TabList mb="1rem">
-            <Tab width={"50%"} m="0 3px 0 10rem">
+            <Tab
+              width={"100%"}
+              m="0 3px 0 10rem"
+              css={{
+                "@media (max-width: 576px)": {
+                  width: "100%",
+                  margin: "0",
+                },
+              }}
+            >
               Login
             </Tab>
-            <Tab width={"50%"} m="0 10rem 0 2px">
+            <Tab
+              width={"100%"}
+              m="0 10rem 0 2px"
+              css={{
+                "@media (max-width: 576px)": {
+                  width: "100%",
+                  margin: "0",
+                },
+              }}
+            >
               Sign Up
             </Tab>
           </TabList>
           <TabPanels>
             <TabPanel>
-              <>
-                <Login />
-              </>
+              <Login />
             </TabPanel>
             <TabPanel>
-              <>
-                <Signup />
-              </>
+              <Signup />
             </TabPanel>
           </TabPanels>
         </Tabs>
