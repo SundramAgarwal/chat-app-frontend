@@ -1,22 +1,28 @@
-import React from "react";
-import { ChatState } from "../Context/ChatProvider";
-import { Box } from "@chakra-ui/react";
-import SideDrawer from "../components/miscellaneous/SideDrawer";
-import MyChats from "../components/MyChats";
+import { Box } from "@chakra-ui/layout";
+import { useState } from "react";
 import ChatBox from "../components/ChatBox";
+import MyChats from "../components/MyChats";
+import SideDrawer from "../components/miscellaneous/SideDrawer";
+import { ChatState } from "../Context/ChatProvider";
 
 const ChatPage = () => {
-  // here we are taking state of a user from context api i.e from chatProvider.js
-  // as their their we have exported ChatState in which user state is available
-  const { user } = ChatState(); // yahan pe hum chatstate me se user state ko nikal rahe hain usko destructure karne ke liye
-  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+  const [fetchAgain, setFetchAgain] = useState(false);
+  const { user } = ChatState();
 
   return (
     <div style={{ width: "100%" }}>
       {user && <SideDrawer />}
-      <Box d="flex" justifyContent="space-between" w="100%" h="91.5vh" p="10px">
-        {user && <MyChats />}
-        {user && <ChatBox />}
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        w="100%"
+        h="91.5vh"
+        p="10px"
+      >
+        {user && <MyChats fetchAgain={fetchAgain} />}
+        {user && (
+          <ChatBox fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} />
+        )}
       </Box>
     </div>
   );
