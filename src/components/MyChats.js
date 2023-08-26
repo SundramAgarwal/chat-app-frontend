@@ -30,7 +30,7 @@ const MyChats = ({ fetchAgain }) => {
       setChats(data);
     } catch (error) {
       toast({
-        title: "Error Occured!",
+        title: "Error Occurred!",
         description: "Failed to Load the chats",
         status: "error",
         duration: 5000,
