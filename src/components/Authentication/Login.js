@@ -32,6 +32,7 @@ const Login = () => {
 
   const submitHandler = async () => {
     setLoading(true);
+    const storedTimestamp = Date.now();
     if (!email || !password) {
       toast({
         title: "Please Fill all the Feilds",
@@ -75,7 +76,10 @@ const Login = () => {
         localStorage.removeItem("rememberedPassword");
       }
       // setUser(data);
-      localStorage.setItem("userInfo", JSON.stringify(data));
+      localStorage.setItem(
+        "userInfo",
+        JSON.stringify({ data, timestamp: storedTimestamp })
+      );
       setLoading(false);
       navigate("/chats");
     } catch (error) {
@@ -98,6 +102,7 @@ const Login = () => {
   };
 
   useEffect(() => {
+    const storedUserData = localStorage.getItem("userInfo");
     const rememberedEmail = localStorage.getItem("rememberedEmail");
     const rememberedPassword = localStorage.getItem("rememberedPassword");
 
@@ -105,6 +110,16 @@ const Login = () => {
       setEmail(rememberedEmail);
       setPassword(rememberedPassword);
       setRememberMe(true);
+    }
+    if (storedUserData) {
+      const { data: storedData, timestamp: storedTimestamp } =
+        JSON.parse(storedUserData);
+      const currentTimestamp = Date.now();
+      const oneDayInMillis = 24 * 60 * 60 * 1000; // One day in milliseconds
+
+      if (currentTimestamp - storedTimestamp >= oneDayInMillis) {
+        localStorage.removeItem("userInfo");
+      }
     }
   }, []);
 
