@@ -189,14 +189,17 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
       fetchMessages();
       setLoading(false);
     } catch (error) {
-      toast({
-        title: "You Successfully leaved the Group",
-        // description: error.response.data.message,
-        status: "warning",
-        duration: 5000,
-        isClosable: true,
-        position: "bottom",
-      });
+      if (error.response) {
+        // An actual error response from the server
+        toast({
+          title: "Error Occurred!",
+          description: error.response.data.message,
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom",
+        });
+      }
       setLoading(false);
     }
     setGroupChatName("");
