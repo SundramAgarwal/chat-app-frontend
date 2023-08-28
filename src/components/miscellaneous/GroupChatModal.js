@@ -21,6 +21,7 @@ import UserBadgeItem from "../UserAvatar/UserBadgeItem";
 import ChatLoading from "../ChatLoading";
 
 const GroupChatModal = ({ children }) => {
+  const { user, chats, setChats } = ChatState();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [groupChatName, setGroupChatName] = useState();
   const [selectedUsers, setSelectedUsers] = useState([]);
@@ -30,8 +31,6 @@ const GroupChatModal = ({ children }) => {
   const toast = useToast();
 
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-
-  const { user, chats, setChats } = ChatState();
 
   const handleGroup = (userToAdd) => {
     if (selectedUsers.includes(userToAdd)) {
@@ -70,7 +69,7 @@ const GroupChatModal = ({ children }) => {
       setSearchResult(data);
     } catch (error) {
       toast({
-        title: "Error Occured!",
+        title: "Error Occurred!",
         description: "Failed to Load the Search Results",
         status: "error",
         duration: 5000,
