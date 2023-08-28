@@ -70,7 +70,7 @@ function SideDrawer() {
 
       const config = {
         headers: {
-          Authorization: `Bearer ${user.token}`,
+          Authorization: `Bearer ${user.data.token}`,
         },
       };
 
@@ -94,13 +94,13 @@ function SideDrawer() {
   };
 
   const accessChat = async (userId) => {
-    // console.log(userId);
+    console.log(userId);
     try {
       setLoadingChat(true);
       const config = {
         headers: {
           "Content-type": "application/json",
-          Authorization: `Bearer ${user.token}`,
+          Authorization: `Bearer ${user.data.token}`,
         },
       };
       const { data } = await axios.post(
@@ -108,7 +108,11 @@ function SideDrawer() {
         { userId },
         config
       );
-      if (!chats.find((c) => c._id === data._id)) setChats([data, ...chats]);
+      if (!chats.find((chat) => chat._id === data._id)) {
+        setChats([data, ...chats]);
+      }
+      // console.log(chats);
+      // console.log(data);
       setSelectedChat(data);
       setLoadingChat(false);
       onClose();
@@ -178,12 +182,12 @@ function SideDrawer() {
               <Avatar
                 size="sm"
                 cursor="pointer"
-                name={user.name}
-                src={user.pic}
+                name={user.data.name}
+                src={user.data.pic}
               />
             </MenuButton>
             <MenuList>
-              <ProfileModal user={user}>
+              <ProfileModal user={user.data}>
                 {/* this is children meneitem vala see the profilemodal to know children */}
                 <MenuItem>My Profile</MenuItem>
               </ProfileModal>
